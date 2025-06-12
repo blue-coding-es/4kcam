@@ -1,26 +1,35 @@
 workflows:
-  default-workflow:
-    name: Build 4K App (Android & iOS)
-    max_build_duration: 40
+  mobile-build:
+    name: Build 4KCam Android & iOS
+    max_build_duration: 45        # minutos (iOS tarda más)
     environment:
-      flutter: stable
-      xcode: latest
+      flutter: stable             # Canal estable
+      xcode: latest               # Codemagic macOS M-series con Xcode 16
 
     scripts:
+      # 1️⃣ Limpieza y dependencias
       - flutter clean
       - flutter pub get
+
+      # 2️⃣ Análisis y tests
       - flutter analyze
       - flutter test
+
+      # 3️⃣ Build Android (APK Release)
       - flutter build apk --release
+
+      # 4️⃣ Build iOS (IPA sin firmar)
       - flutter build ios --release --no-codesign
 
     artifacts:
+      # Android
       - build/**/outputs/**/*.apk
-      - build/ios/ipa/*.ipa
+      # iOS (.app y .ipa generados en build/ios/)
+      - build/ios/**/iphoneos/*.ipa
+      - build/ios/**/iphoneos/*.app
 
     triggering:
-      events:
-        - push
+      events: [push]
       branch_patterns:
         - pattern: "main"
           include: true
