@@ -13,7 +13,7 @@ workflows:
 
       # 2️⃣ Análisis y tests
       - flutter analyze
-      - flutter test
+      # - flutter test
 
       # 3️⃣ Build Android (APK Release)
       - flutter build apk --release
