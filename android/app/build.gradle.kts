@@ -20,7 +20,7 @@ android {
     }
     
     packagingOptions {
-        pickFirst "lib/**/libc++_shared.so"
+        pickFirsts += setOf("lib/**/libc++_shared.so")
     }
 
     defaultConfig {
