@@ -17,7 +17,7 @@ class CameraControl {
   }
 
   Future<Map<String, dynamic>> _recv() async {
-    final line = await _socket!.transform(utf8.decoder).transform(const LineSplitter()).first;
+    final line = await _socket!.cast<List<int>>().transform(utf8.decoder).transform(const LineSplitter()).first;
     return jsonDecode(line) as Map<String, dynamic>;
   }
 
