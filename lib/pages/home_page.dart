@@ -6,6 +6,7 @@ import '../providers/camera_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
+
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
 }
@@ -13,14 +14,25 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   late final player = Player();
   late final controller = VideoController(player);
+  CameraAPI? api;
   bool _connected = false;
 
   Future<void> _connect() async {
-    final cam = ref.read(cameraControlProvider);
-    await cam.connect();
-    await cam.startSession();
-    await player.open(Media('rtsp://192.168.88.1/livestream/12'));
-    setState(() => _connected = true);
+    final result = await ref.read(cameraProvider.future);
+    api = result;
+    await api?.connect();
+    await api?.startPreview(player);
+    setState(() {
+      _connected = true;
+    });
+  }
+
+  Future<void> _startRecording() async {
+    await api?.startRecord();
+  }
+
+  Future<void> _stopRecording() async {
+    await api?.stopRecord();
   }
 
   @override
@@ -32,13 +44,23 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('4K Cam – RTSP')),
+      appBar: AppBar(title: const Text('4K Cam')),
       body: Column(
         children: [
-          Expanded(child: Video(controller: controller)),
+          Expanded(
+            child: Video(controller: controller),
+          ),
           ElevatedButton(
             onPressed: _connected ? null : _connect,
             child: const Text('Conectar'),
+          ),
+          ElevatedButton(
+            onPressed: !_connected ? null : _startRecording,
+            child: const Text('Start Record'),
+          ),
+          ElevatedButton(
+            onPressed: !_connected ? null : _stopRecording,
+            child: const Text('Stop Record'),
           ),
         ],
       ),
