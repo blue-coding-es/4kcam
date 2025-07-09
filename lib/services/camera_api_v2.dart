@@ -6,7 +6,7 @@ import 'camera_api.dart';
 class CameraApiV2 implements CameraAPI {
   Socket? _socket;
   int _token = 0;
-  final String host = '192.168.88.1';
+  final String host = '192.168.1.1';
 
   @override
   Future<void> connect() async {
