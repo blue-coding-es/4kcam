@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/camera_api.dart';
 import '../services/camera_api_v1.dart';
 import '../services/camera_api_v2.dart';
+import 'dart:io';
+
 
 final cameraProvider = FutureProvider<CameraAPI>((ref) async {
   // Detección automática
